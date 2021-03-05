@@ -1,0 +1,132 @@
+#include <iostream>
+
+using namespace std;
+
+int i, j, n, d, count;
+
+string name1;
+
+void HoaraSort(int* left, int* right, string* left_1, string* right_1, int n)
+{
+    if (left == right) return;
+    int* l = left;
+    string* l_1 = left_1;
+    int* r = right;
+    string* r_1 = right_1;
+    int* pivot = left;
+    string* pivot_1 = left_1;
+    while (l <= r) {
+        if (*l > *pivot && *r <= *pivot)
+        {
+            swap(*l, *r);
+            swap(*l_1, *r_1);
+            continue;
+        }
+        if (*l <= *pivot)
+        {
+            l++;
+            l_1++;
+            continue;
+        }
+        if (*r > *pivot)
+        {
+            r_1++;
+            r--;
+            continue;
+        }
+    }
+    if (l > right)
+    {
+        l--;
+        l_1--;
+        r--;
+        r_1--;
+        swap(*l, *pivot);
+        swap(*l_1, *pivot_1);
+    };
+    HoaraSort(left, r, left_1, r_1, n);
+    HoaraSort(l, right, l_1, right_1, n);
+}
+
+void print_hoara(int* left, int* right, string* left_1, string* right_1, int n)
+{
+    HoaraSort(left, left + n - 1, left_1, left_1 + n - 1, n);
+    cout << "\n\n Результат сортировки:\n";
+    for (i = 0; i < n; i++)
+        cout << left_1[i] << "  " << left[i] << endl;
+}
+
+void Shell(int area[], string lake[], int n)
+{
+    d = n;
+    d = d / 2;
+    while (d > 0)
+    {
+        for (i = 0; i < n - d; i++)
+        {
+            j = i;
+            while (j >= 0 && area[j] > area[j + d])
+            {
+                int count = area[j];
+                name1 = lake[j];
+                area[j] = area[j + d];
+                lake[j] = lake[j + d];
+                area[j + d] = count;
+                lake[j + d] = name1;
+                j--;
+            }
+        }
+        d = d / 2;
+    }
+    cout << "\n\n Результат сортировки:\n";
+    for (i = 0; i < n; i++)
+        cout << lake[i] << "  " << area[i] << endl;
+}
+
+
+
+
+int main()
+{
+    system("chcp 1251>nul");
+    setlocale(LC_ALL, "rus");
+    int n, i, choice;
+    n = 0;
+
+
+    do {
+        cout << "Введите количество озер ";
+        cin >> n;
+    } while (n < 0);
+
+
+    string* lake = new string[n];
+    int* area = new int[n];
+    for (i = 0; i < n; i++)
+    {
+        cout << "Введите название озера ";
+        cin >> lake[i];
+
+        do {
+            cout << "Введите площадь поверхности озера ";
+            cin >> area[i];
+        } while (area[i] < 0);
+
+    }
+    for (i = 0; i < n; i++) {
+        cout << "\nПлощадь поверхности озера " << lake[i] << " равна " << area[i] << "\n\n";
+    }
+
+    cout << "Выполнить сортировку методом:\n" << "\t1 - Шелла\n" << "\t2 - Хоара" << endl;
+    cin >> choice;
+    while (choice < 1 || choice > 2)
+    {
+        cout << "1 - Шелла\n" << "2 - Хоара" << endl;
+        cin >> choice;
+    }
+
+    if (choice == 1)
+        Shell(area, lake, n);
+    if (choice == 2)
+        print_hoara(area, area + n - 1, lake, lake + n - 1, n);
+}
