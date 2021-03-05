@@ -1,0 +1,137 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+struct GosList
+{
+	string name;
+	string lang;
+	string curr;
+	float rate = 0;
+};
+
+fstream List("GosL.txt", ios::out);
+int main()
+{
+	system("chcp 1251>nul");
+	GosList country[50];
+	GosList new_country[50];
+	string tend;
+	int i = 0, counter = 0;
+	while (tend != "end")
+	{
+		cout << "Введите название государства" << endl;
+		getline(cin, country[i].name);
+		cout << "Введите государственный язык" << endl;
+		getline(cin, country[i].lang);
+		cout << "Введите денежную единицу" << endl;
+		getline(cin, country[i].curr);
+		cout << "Введите курс валюты относительно доллара $" << endl;
+		
+		while (!(cin >> country[i].rate) || cin.get() != '\n')
+		{
+			cout << "Курс валюты может быть только ПОЛОЖИТЕЛЬНЫМ ЧИСЛОМ" << endl;
+			cin.clear();
+			cin.sync();
+			cin.get();
+			cin.get();
+		}
+
+		cout << "Чтобы продолжить введите любой символ" << endl << "Чтобы закончить выполнение программы - введите 'end' " << endl;
+		cin >> tend;
+		i++;
+		counter++;
+		system("cls");
+		cin.get();
+	}
+
+	List << "\nСписок стран:\n\n";
+	cout << "\nСписок стран:\n\n";
+
+	for (i = 0; i < counter; i++)
+	{
+		List << country[i].name; List << endl;
+		cout << "Страна: " << country[i].name << endl;
+
+		List << country[i].lang; List << endl;
+		cout << "Государственный язык: " << country[i].lang << endl;
+
+		List << country[i].curr; List << endl;
+		cout << "Валюта: " << country[i].curr << endl;
+
+		List << country[i].rate; List << endl;
+		cout << "Курс валюты: " << country[i].rate << endl << endl;
+	}
+
+	string deleter;
+	cout << "Введите название страны для удаления" << endl;
+	getline(cin,deleter);
+
+	List << "\nОбновленный список стран: \n\n";
+	cout << "\nОбновленный список стран: \n\n";
+
+	int counter1 = 0, sort = 0, number;
+
+	for (i = 0; i < counter; i++)
+	{
+		if (country[i].name != deleter)
+		{
+			new_country[sort] = country[i];
+			sort++;
+			counter1++;
+		}
+	}
+
+	for (i = 0; i < counter1; i++)
+	{
+		cout << "Страна: " << new_country[i].name << endl;
+		List << new_country[i].name; List << endl;
+
+		cout << "Государственный язык: " << new_country[i].lang << endl;
+		List << new_country[i].lang; List << endl;
+
+		cout << "Валюта: " << new_country[i].curr << endl;
+		List << new_country[i].curr; List << endl;
+
+		cout << "Курс валюты: " << new_country[i].rate << endl;
+		List << new_country[i].rate; List << endl << endl;
+	}
+
+	if (counter1 == 0)
+	{
+		cout << "Массив пуст. Элементы отсутствуют" << endl;
+		return 0;
+	}
+
+	cout << "Введите номер элемента, который нужно добавить" << endl;
+
+	while (!(cin >> number) || (cin.get() != '\n')|| (number > counter1) || (number < 1))
+	{
+		cout << "Номер элемента может быть только ПОЛОЖИТЕЛЬНЫМ ЧИСЛОМ" << endl;
+		cout << "Выберите один элемент из массива (с 1 по " << counter1 << ") " << endl;
+		cin.clear();
+		cin.sync();
+		cin.get();
+		cin.get();
+	}
+
+	number--;
+
+	for (i = 0; i < 2; i++)
+	{
+		cout << "Страна: " << new_country[number].name << endl;
+		List << new_country[number].name; List << endl;
+
+		cout << "Государственный язык: " << new_country[number].lang << endl;
+		List << new_country[number].lang; List << endl;
+
+		cout << "Валюта: " << new_country[number].curr << endl;
+		List << new_country[number].curr; List << endl;
+
+		cout << "Курс валюты: " << new_country[number].rate << endl;
+		List << new_country[number].rate; List << endl << endl;
+	}
+
+	return 0;
+}
