@@ -1,0 +1,105 @@
+#include <iostream>
+
+using namespace std;
+
+struct List
+{
+	char data;
+	List* next;
+	List* last;
+};
+
+List* create_list(int size)
+{
+	List* front = 0, * spisok = new List;
+	int i;
+	cout << "Введите элементы списка\n";
+	cin >> spisok->data;
+	front = spisok;
+	spisok->next = NULL;
+	spisok->last = NULL;
+	for (i = 1; i < size; i++)
+	{
+		List* spisok_2 = new List;
+		List* sp = spisok;
+		spisok->next = spisok_2;
+		spisok = spisok->next;
+		cin >> spisok->data;
+		spisok->next = NULL;
+		spisok->last = sp;
+	}
+	return front;
+};
+
+void print_list(List* front)
+{
+	if (front == NULL)
+	{
+		cout << "Пустой список\n";
+	}
+	else
+	{
+		List* spisok = front;
+		while (!spisok == NULL)
+		{
+			cout << spisok->data << "\t";
+			spisok = spisok->next;
+		}
+	}
+	cout << endl;
+};
+
+void push(List* &front, char key, int size)
+{
+	List* spisok = front;
+	int n = size;
+	for (int i = 0; i < n; i++)
+	{
+		if (spisok->data == key)
+		{
+			List* add = new List;
+			List* nxt = spisok->next;
+			List* lst = spisok;
+			spisok->next = add;
+			spisok = spisok->next;
+			cout << "Введите новый элемент\n";
+			cin >> spisok->data;
+			if (key == size)
+			{
+				spisok->next = NULL;
+				spisok->last = lst;
+			}
+			else
+			{
+				spisok->next = nxt;
+				spisok->last = lst;
+			}
+			n++;
+			i++;
+		}
+		spisok = spisok->next;
+	}
+};
+
+int main()
+{
+	system("chcp 1251>nul");
+	int size_list;
+	cout << "Введите размер списка: \n";
+	cin >> size_list;
+	while (size_list < 1)
+	{
+		cout << "Ошибка! Введите корректный размер списка: \n";
+		cin >> size_list;
+	}
+	List* spisok = create_list(size_list);
+	cout << "СПИСОК: \n";
+	print_list(spisok);
+	char key;
+	cout << "Введите ключ для информационного поля, после которого нужно добавить элемент\n";
+	cin >> key;
+	push(spisok, key, size_list);
+	cout << "Список после добавления:\n";
+	print_list(spisok);
+	return 0;
+}
