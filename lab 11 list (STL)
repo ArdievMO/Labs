@@ -1,0 +1,76 @@
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+void print_list(list<int>spisok)
+{
+	int size_list = spisok.size();
+	if (size_list == 0)
+	{
+		cout << "Пустой список\n";
+	}
+	else
+	{
+		for (int i = 0; i < size_list; i++)
+		{
+			cout << spisok.front();
+			spisok.pop_front();
+		}
+		cout << endl;
+	}
+}
+
+int main()
+{
+	system("chcp 1251>nul");
+	list <int> spisok_1;
+	bool flag = false;
+	int qnt, sp, i, flang;
+	cout << "Введите размер списка\n";
+	cin >> qnt;
+	while (qnt < 1)
+	{
+		cout << "Ошибка! Введите корректное значение\n";
+		cin >> qnt;
+	}
+	cout << "Введите элементы списка\n";
+	for (i = 0; i < qnt; i++)
+	{
+		cin >> sp;
+		spisok_1.push_back(sp);
+	}
+	cout << "СПИСОК: \n";
+	print_list(spisok_1);
+	cout << endl;
+	for (i = 0; i < qnt; i++)
+	{
+		if (spisok_1.front() % 2 == 0)
+		{
+			flang = i;
+		}
+		spisok_1.push_back(spisok_1.front());
+		spisok_1.pop_front();
+	}
+	for (i = 0; i < qnt; i++)
+	{
+		if (i == flang)
+		{
+			spisok_1.pop_front();
+			flag = true;
+		}
+		else
+		{
+			spisok_1.push_back(spisok_1.front());
+			spisok_1.pop_front();
+		}
+	}
+	if (flag == false)
+		cout << "Четных элементов в последовательностии нет\nСписок не изменен\n";
+	else
+	{
+		cout << "Список после удаления\n";
+		print_list(spisok_1);
+	}
+	return 0;
+}
