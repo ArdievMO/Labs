@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	system("chcp 1251>nul");
+	string str;
+	int i, j, k, n =0;
+	cout << "Введите размер массива" << endl;
+	cin >> k;
+	while (isdigit(k)) {
+		cout << "Введите корректный размер массива" << endl;
+		cin >> k;
+	}
+	cin.ignore();
+	string* text = new string[k];
+	string* itog = new string[k];
+	for (i = 0; i < k; i++)
+	{
+		cout << "Введите строку" << endl;
+		getline(cin, str);
+		text[i] = str;
+	}
+
+	for (i = 0; i < k; i++)
+	{
+		cout << text[i] << endl;
+		if (text[i][0] == text[i][text[i].length() - 1])
+		{
+
+		}
+		else
+		{
+			itog[n] = text[i];
+			n++;
+		}
+	}
+	cout << "Конечный массив: " << endl;
+	for (i = 0; i < n; i++)
+	{
+		cout << itog[i] << endl;
+	}
+	delete[] text;
+	delete[] itog;
+}
