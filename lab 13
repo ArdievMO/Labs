@@ -1,0 +1,47 @@
+#include<iostream>
+#include<stdio.h>
+
+using namespace std;
+
+bool P(int* X, int k, int y, int N) // Поиск позиции для ферзя
+{
+    int i = 0;
+    while ((i < k) && (y != X[i]) && (abs(k - i) != abs(y - X[i])))
+        i++;
+    if (i == k)
+        return true;
+    else if (i != k)
+        return false;
+    else
+        return !true && !false;
+}
+
+void Backtracking(int k, int& Count, int N, int* X) // Поиск с возвратом позиций
+{
+    int i, y;
+    for (y = 0; y < N; y++)
+        if (P(X, k, y, N))
+        {
+            X[k] = y;
+            if (k == N - 1) {
+                for (i = 0; i < N; i++) { cout << char('A' + i) << X[i] + 1 << " "; }
+                cout << endl;
+                Count++;
+            }
+            Backtracking(k + 1, Count, N, X);
+        }
+}
+int main()
+{
+    system("chcp 1251>nul");
+    int N = 8, Count = 0;
+    int* arr = new int[N];
+    for (int i = 0; i < N; i++)
+        arr[i] = 0;
+    cout << "Расстановки " << N << " ферзей:\n";
+    cout << "На доске " << N << " на " << N << "\n";
+    Backtracking(0, Count, N, arr);
+    cout << "Всего " << Count << " расстановок\n";
+    delete[] arr;
+    system("pause");
+}
