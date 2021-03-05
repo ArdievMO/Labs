@@ -1,0 +1,219 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+struct List
+{
+    string name;
+    string birth;
+    string passport;
+};
+
+void random(List array_of_elements[], int size)
+{
+    for (int i = 0; i < size; i++) {
+        ifstream name("List.txt");
+        string point;
+        int count = -1;
+        int rnd = rand() % 225;
+
+        while (count != rnd)
+        {
+            getline(name, point);
+            count++;
+        }
+        array_of_elements[i].name = point;
+        name.close();
+
+        ifstream date("birthday.txt");
+        rnd = rand() % 365;
+        count = -1;
+
+        while (count != rnd)
+        {
+            getline(date, point);
+            count++;
+        }
+        array_of_elements[i].birth = point;
+        date.close();
+
+        ifstream passport("passport.txt");
+        rnd = rand() % 225;
+        count = -1;
+
+        while (count != rnd)
+        {
+            getline(passport, point);
+            count++;
+        }
+        array_of_elements[i].passport = point;
+        date.close();
+    }
+}
+
+
+
+void print_list(List array_of_elements[], int size)
+{
+    for (int i = 0; i < size; i++) {
+        cout << "\nФИО:" << array_of_elements[i].name;
+        cout << "\nДата рождения: " << array_of_elements[i].birth;
+        cout << "\nНомер паспорта " << array_of_elements[i].passport << "\n";
+    }
+}
+
+struct MS {
+    char sim;
+    int zns;
+    MS* next;
+};
+
+int BMura(string pstr, List* day, int size)
+{
+    string spisok;
+    int sdv, rms = 1, poz, ind = 0;
+    bool end = 0, nai = 0, sov = 0;
+    for (int i = 0; i < size; i++) spisok += day[i].birth + '\n';
+    MS* first = new MS;
+    MS* cur = first;
+    MS* nov;
+    cur->next = NULL;
+    first->sim = pstr[pstr.length() - 1];
+    first->zns = pstr.length();
+    for (int i = pstr.length() - 2; i >= -1; i--) {
+        cur = first;
+        nai = 0;
+        while (cur->next != NULL && !nai) {
+            if (pstr[i] == cur->sim) nai = 1;
+            cur = cur->next;
+        }
+        if (!nai) {
+            nov = new MS;
+            nov->next = NULL;
+            nov->sim = pstr[i];
+            nov->zns = rms++;
+            cur->next = nov;
+            cur = nov;
+        }
+    }
+    cur = first;
+    while (cur->next != NULL) {
+        cout << "Символ: " << cur->sim << " Сдвиг: " << cur->zns << endl;
+        cur = cur->next;
+    }
+    poz = pstr.length() - 1;
+    nai = 0;
+    cur = first;
+    int elm, kel;
+    bool tak = 0;
+    while (poz < spisok.length()) {
+        elm = pstr.length() - 1;
+        cur = first;
+        tak = 0;
+        ind = 0;
+        if (spisok[poz] == pstr[elm]) {
+            kel = poz;
+            while (spisok[kel] == pstr[elm] && elm >= 0) {
+                kel--; elm--;
+            }
+            if (elm == -1) { sov = 1; nai = 1; }
+        }
+        for (int j = 0; j < poz; j++) if (spisok[j] == '\n') ind++;
+        while (cur->next != NULL && !tak) {
+            if (spisok[poz] == cur->sim) tak = 1;
+            else cur = cur->next;
+        }
+        if (tak) {
+            if (poz + cur->zns < spisok.length()) poz += cur->zns;
+            else poz = spisok.length();
+        }
+        else {
+            if (poz + pstr.length() < spisok.length()) poz += pstr.length();
+            else poz = spisok.length();
+        }
+        if (sov) {
+            cout << "\nЭлемент с заданной датой рождения:\n\n";
+            cout << "\t" << day[ind].name << "\n\t" << day[ind].birth << "\n\t" << day[ind].passport << "\n\t";
+        }
+        sov = 0;
+    }
+    if (!nai) cout << "Студент не найден. " << endl;
+}
+
+int KMP(string pstr, List day[], int size)
+{
+    string spisok;
+    for (int i = 0; i < size; i++) spisok += day[i].birth + '\n';
+    cout << spisok << endl; //!_!
+    int* s = new int[pstr.length()];
+    for (int i = 1, j = 0; i < pstr.length();)
+    {
+        if (pstr[i] == pstr[j]) { s[i] = j + 1; i++; j++; }
+        else {
+            if (j == 0) s[i++] = 0;
+            else j = s[j - 1];
+        }
+    }
+    int i = 0, j = 0, ind = 0;
+    while (i < spisok.length()) {
+        if (spisok[i] == pstr[j]) {
+            i++; j++;
+            if (j == pstr.length()) {
+                for (int e = 0; e < i; e++) if (spisok[e] == '\n') ind++;
+                cout << "\nЭлемент с заданной датой рождения:\n\n";
+                cout << "\t" << day[ind].name << "\n\t" << day[ind].birth << "\n\t" << day[ind].passport << "\n\t";
+                ind++;
+            }
+        }
+        else if (j == 0) 
+            i++;
+        else 
+            j = s[j - 1];
+    }
+}
+
+int main()
+{
+    system("chcp 1251>nul");
+    setlocale(LC_ALL, "Russian");
+
+    int size;
+    string date_of_birthday;
+    char choice_of_method;
+
+    cout << "Введите количество элементов:";
+    cin >> size;
+
+    srand(time(NULL));
+    while (size <= 0)
+    {
+        cout << "Ошибка! Введите корректное количество элементов:";
+        cin >> size;
+    }
+
+    cout << endl;
+    List* array_of_elements = new List[size];
+    random(array_of_elements, size);
+    print_list(array_of_elements, size);
+
+    cout << "\nВведите дату дня рождения для поиска подходящего элемента: ";
+    cin >> date_of_birthday;
+
+    cout << "Выберите метод поиска:\n\n\t1.Метод Бойера-Мура\n\t2.Метод Кнута-Морриса-Пратта\n";
+    cin >> choice_of_method;
+
+    switch (choice_of_method)
+    {
+    case '1':
+        BMura(date_of_birthday, array_of_elements, size);
+        break;
+    case '2':
+        KMP(date_of_birthday, array_of_elements, size);
+        break;
+    default:
+        cout << "Выберите один из вариантов";
+    }
+
+    delete[] array_of_elements;
+}
