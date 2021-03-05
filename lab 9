@@ -1,0 +1,71 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+int main()
+{
+    system("chcp 1251>nul");
+    ifstream input("file1.txt");
+    ofstream output("file2.txt");
+    string str, slovo, slv, stroka;
+    while (getline(input, str))
+    {
+        ofstream outp("file3.txt");
+        ifstream inp("file3.txt");
+
+        outp << str << endl;
+
+        int cnt = 0;
+
+        bool flag = false;
+
+        while (inp >> slovo)
+        {
+            ofstream op("file4.txt");
+            ifstream ip("file4.txt");
+
+            getline(inp, stroka);
+            op << stroka << endl;
+
+            while (!ip.eof())
+            {
+                ip >> slv;
+                if (slv == slovo)
+                {
+                    cnt++;
+                }
+            }
+
+            outp << stroka << endl;
+
+            op.close();
+            ip.close();
+            remove("file4.txt");
+            if (cnt > 1)
+            {
+                flag = true;
+            }
+        }
+        outp.close();
+        inp.close();
+        remove("file3.txt");
+
+        if (flag == true)
+        {
+            output << "Vivod stroki = " << str << endl;
+        }
+    }
+    string glas("AaEeIiOoUuYy");
+    int counter = 0;
+    for (auto i = str.begin(); i != str.end(); i++)
+    {
+        if (glas.find(*i) != string::npos)
+        {
+            counter++;
+        }
+    }
+    output << endl << "Количество гласных - " << counter;
+    output.close();
+    return 0;
+}
