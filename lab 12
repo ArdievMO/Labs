@@ -1,0 +1,146 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+struct List
+{
+    string name;
+    string birth;
+    string passport;
+};
+
+void random(List array_of_elements[], int size)
+{
+    for (int i = 0; i < size; i++) {
+        ifstream name("List.txt");
+        string point;
+        int count = -1;
+        int rnd = rand() % 225;
+
+        while (count != rnd)
+        {
+            getline(name, point);
+            count++;
+        }
+        array_of_elements[i].name = point;
+        name.close();
+
+        ifstream date("birthday.txt");
+        rnd = rand() % 365;
+        count = -1;
+
+        while (count != rnd)
+        {
+            getline(date, point);
+            count++;
+        }
+        array_of_elements[i].birth = point;
+        date.close();
+
+        ifstream passport("passport.txt");
+        rnd = rand() % 225;
+        count = -1;
+
+        while (count != rnd)
+        {
+            getline(passport, point);
+            count++;
+        }
+        array_of_elements[i].passport = point;
+        date.close();
+    }
+}
+
+
+
+void print_list(List array_of_elements[], int size)
+{
+    for (int i = 0; i < size; i++) {
+        cout << "\nФИО:" << array_of_elements[i].name;
+        cout << "\nДата рождения: " << array_of_elements[i].birth;
+        cout << "\nНомер паспорта " << array_of_elements[i].passport << "\n";
+    }
+}
+
+void direct_search(string date, List array_of_elements[], int size)
+{
+    cout << "\n\n\nМетод прямого поиска: \n";
+
+    string temp;
+    int j = 0;
+    bool flag = false;
+    for (int i = 0; i < size; i++) {
+        temp = array_of_elements[i].birth;
+        while (date[j] == array_of_elements[i].birth[j] && j < date.length()) j++;
+        if (j == date.length()) {
+            cout << "\nЭлемент с заданной датой рождения:\n\n";
+            cout << "\t" << array_of_elements[i].name << "\n\t" << array_of_elements[i].birth << "\n\t" << array_of_elements[i].passport << "\n\t";
+        }
+        j = 0;
+    }
+    if (flag == false)
+        cout << "Элементы с заданной датой рождения не найдены!";
+
+}
+
+void linear_search(string date, List array_of_elements[], int size)
+{
+    bool flag = false;
+    cout << "\n\n\nМетод линейного поиска:\n ";
+
+    for (int i = 0; i < size; i++) {
+        if (date == array_of_elements[i].birth)
+        {
+            cout << "\nЭлемент с заданной датой рождения:\n\n";
+            cout << "\t" << array_of_elements[i].name << "\n\t" << array_of_elements[i].birth << "\n\t" << array_of_elements[i].passport << "\n\t";
+            flag = true;
+        }
+    }
+    if (flag == false)
+        cout << "Элементы с заданной датой рождения не найдены!";
+}
+
+int main()
+{
+    system("chcp 1251>nul");
+    setlocale(LC_ALL, "rus");
+
+    int size;
+    string date_of_birthday;
+    char choice_of_method;
+
+    cout << "Введите количество элементов:";
+    cin >> size;
+
+    srand(time(NULL));
+    while (size <= 0)
+    {
+        cout << "Ошибка! Введите корректное количество элементов:";
+        cin >> size;
+    }
+
+    cout << endl;
+    List* array_of_elements = new List[size];
+    random(array_of_elements, size);
+    print_list(array_of_elements, size);
+
+    cout << "\nВведите дату дня рождения для поиска подходящего элемента: ";
+    cin >> date_of_birthday;
+
+    cout << "Выберите метод поиска:\n\n\t1.Прямой поиск\n\t2.Линейный поиск\n";
+    cin >> choice_of_method;
+
+    switch (choice_of_method)
+    {
+    case '1':
+        direct_search(date_of_birthday, array_of_elements, size);
+        break;
+    case '2':
+        linear_search(date_of_birthday, array_of_elements, size);
+        break;
+    default:
+        cout << "Выберите один из вариантов";
+    }
+    delete[] array_of_elements;
+};
